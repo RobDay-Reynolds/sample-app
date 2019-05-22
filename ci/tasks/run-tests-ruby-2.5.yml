@@ -1,0 +1,16 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: ruby:2.5
+
+inputs:
+- name: src
+
+run:
+  path: src/ci/tasks/run-tests.sh
+
+params:
+  TEST_GROUP: 0

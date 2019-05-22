@@ -1,0 +1,122 @@
+---
+groups:
+  - name: main
+    jobs:
+      - run-tests-ruby-2.4
+      - run-tests-ruby-2.5
+      - run-tests-ruby-2.6
+      - merge-to-master
+jobs:
+  - name: run-tests-ruby-2.4
+    public: true
+    serial: true
+    serial_groups: [tests-2.4]
+    build_logs_to_retain: 250
+    plan:
+      - get: src
+        trigger: true
+      - task: test-group-1
+        timeout: 2h
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby:2.4
+          run:
+            path: src/ci/tasks/run-tests.sh
+            args: []
+        params:
+          TEST_GROUP: 1
+      - task: test-group-2
+        timeout: 2h
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby:2.4
+          run:
+            path: src/ci/tasks/run-tests.sh
+            args: []
+        params:
+          TEST_GROUP: 2
+
+  - name: run-tests-ruby-2.6
+    public: true
+    serial: true
+    serial_groups: [tests-2.6]
+    build_logs_to_retain: 250
+    plan:
+      - get: src
+        trigger: true
+      - task: test-group-1
+        timeout: 2h
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby:2.6
+          run:
+            path: src/ci/tasks/run-tests.sh
+            args: []
+        params:
+          TEST_GROUP: 1
+      - task: test-group-2
+        timeout: 2h
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ruby:2.6
+          run:
+            path: src/ci/tasks/run-tests.sh
+            args: []
+        params:
+          TEST_GROUP: 2
+
+  - name: run-tests-ruby-2.5
+    public: true
+    serial: true
+    serial_groups: [tests-2.5]
+    build_logs_to_retain: 250
+    plan:
+      - get: src
+        trigger: true
+      - task: test-group-1
+        timeout: 2h
+        file: src/ci/tasks/run-tests-ruby-2.5.yml
+        params:
+          TEST_GROUP: 1
+      - task: test-group-2
+        timeout: 2h
+        file: src/ci/tasks/run-tests-ruby-2.5.yml
+        params:
+          TEST_GROUP: 2
+
+  - name: merge-to-master
+    serial: true
+    plan:
+      - get: src
+        passed: [run-tests-ruby-2.4,run-tests-ruby-2.5,run-tests-ruby-2.6]
+      - put: src-master
+        params:
+          repository: src
+          merge: true
+
+resources:
+  - name: src
+    type: git
+    source:
+      uri: ((src_url))
+      branch: develop
+      private_key: ((github_deployment_key))
+
+  - name: src-master
+    type: git
+    source:
+      uri: ((src_url))
+      branch: master
+      private_key: ((github_deployment_key))
