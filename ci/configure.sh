@@ -12,4 +12,5 @@ fi
 fly -t concourse set-pipeline -p "${pipeline}" \
     -c ci/pipeline.yml \
     --load-vars-from <(lpass show -G "sample-app-concourse-secrets" --notes) \
+    --var=src_url=git@source.datanerd.us:rdayreynolds/sample-app.git \
     --var=branch_name=develop
