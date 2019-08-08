@@ -22,7 +22,8 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: ruby:2.4
+              repository: ruby
+              tag: '2.4'
           run:
             path: src/ci/tasks/run-tests.sh
             args: []
@@ -35,7 +36,8 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: ruby:2.4
+              repository: ruby
+              tag: '2.4'
           run:
             path: src/ci/tasks/run-tests.sh
             args: []
@@ -57,7 +59,8 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: ruby:2.6
+              repository: ruby
+              tag: '2.6'
           run:
             path: src/ci/tasks/run-tests.sh
             args: []
@@ -70,7 +73,8 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: ruby:2.6
+              repository: ruby
+              tag: '2.6'
           run:
             path: src/ci/tasks/run-tests.sh
             args: []
